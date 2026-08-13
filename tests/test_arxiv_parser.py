@@ -105,3 +105,32 @@ def test_ingest_arxiv_upserts_parsed_papers_without_network() -> None:
     assert rows[0]["primary_category"] == "cs.LG"
     assert json.loads(rows[0]["categories"]) == ["cs.LG", "cs.DC"]
     assert rows[0]["pdf_url"] == "http://arxiv.org/pdf/2401.01234v2"
+
+
+def test_fetch_arxiv_feed_retries_on_timeout(monkeypatch) -> None:
+    import httpx
+
+    from radar.collectors import arxiv_collector
+
+    calls = {"n": 0}
+
+    class FakeResponse:
+        def __init__(self, text: str) -> None:
+            self.text = text
+
+        def raise_for_status(self) -> None:
+            return None
+
+    def fake_get(url, params=None, timeout=None):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise httpx.ReadTimeout("timed out")
+        return FakeResponse(ATOM_XML)
+
+    monkeypatch.setattr(httpx, "get", fake_get)
+    monkeypatch.setattr(arxiv_collector.time, "sleep", lambda s: None)
+
+    xml = arxiv_collector.fetch_arxiv_feed("cat:cs.LG", backoff_seconds=0.01)
+
+    assert calls["n"] == 3
+    assert "Fast" in xml and "Inference" in xml and "</feed>" in xml

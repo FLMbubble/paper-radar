@@ -51,12 +51,25 @@ def fetch_github_repos(
         headers["Authorization"] = f"Bearer {token}"
 
     for attempt in range(1, max_attempts + 1):
-        response = httpx.get(
-            GITHUB_SEARCH_URL,
-            params=build_github_params(query, per_page),
-            headers=headers,
-            timeout=30.0,
-        )
+        try:
+            response = httpx.get(
+                GITHUB_SEARCH_URL,
+                params=build_github_params(query, per_page),
+                headers=headers,
+                timeout=30.0,
+            )
+        except httpx.HTTPError as exc:
+            if attempt < max_attempts:
+                time.sleep(backoff_seconds * attempt)
+                continue
+            logger.warning(
+                "GitHub search network error for query %r after %s attempts: %s",
+                query,
+                max_attempts,
+                exc,
+            )
+            return {"items": []}
+
         if response.status_code < 400:
             return response.json()
         if response.status_code in {403, 429}:

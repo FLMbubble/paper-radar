@@ -26,6 +26,20 @@ The refreshed snapshot is committed back to the repository.
 - Shows everything in a local Streamlit dashboard.
 - Links papers to likely GitHub implementations with explainable heuristics.
 
+## Direction Radar
+
+Track specific research directions — VLA, VLM, World Model — each with its own sub-topic tags. Switch directions by adding `DIR=...` to the standard make targets; no code changes needed.
+
+```bash
+source .venv/bin/activate
+make pipeline DIR=vlm      # vla / vlm / wm
+make dashboard DIR=vlm
+```
+
+Without `DIR`, `make pipeline` / `make dashboard` keep their original AI Infra behavior. Run `make help` for the full target list.
+
+See [docs/directions.md](docs/directions.md) for the sub-topic list, manual CLI usage, and customization guide.
+
 ## Quick Start
 
 ```bash

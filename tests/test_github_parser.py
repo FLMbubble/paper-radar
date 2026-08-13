@@ -131,3 +131,60 @@ def test_ingest_github_upserts_repos_and_snapshots_without_network() -> None:
     assert repos[0]["open_issues"] == 3
     assert snapshots[0]["captured_at"] == "2026-07-09"
     assert snapshots[0]["stars"] == 42
+
+
+def test_fetch_github_repos_retries_on_timeout(monkeypatch) -> None:
+    import httpx
+
+    from radar.collectors import github_collector
+
+    calls = {"n": 0}
+
+    class FakeResponse:
+        def __init__(self, payload) -> None:
+            self._payload = payload
+
+        @property
+        def status_code(self) -> int:
+            return 200
+
+        def json(self):
+            return self._payload
+
+    def fake_get(url, params=None, headers=None, timeout=None):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise httpx.ReadTimeout("timed out")
+        return FakeResponse(GITHUB_PAYLOAD)
+
+    monkeypatch.setattr(httpx, "get", fake_get)
+    monkeypatch.setattr(github_collector.time, "sleep", lambda s: None)
+
+    payload = github_collector.fetch_github_repos(
+        "inference server", per_page=5, backoff_seconds=0.01
+    )
+
+    assert calls["n"] == 3
+    assert payload["total_count"] == 1
+
+
+def test_fetch_github_repos_returns_empty_after_max_timeouts(monkeypatch) -> None:
+    import httpx
+
+    from radar.collectors import github_collector
+
+    calls = {"n": 0}
+
+    def fake_get(url, params=None, headers=None, timeout=None):
+        calls["n"] += 1
+        raise httpx.ReadTimeout("timed out")
+
+    monkeypatch.setattr(httpx, "get", fake_get)
+    monkeypatch.setattr(github_collector.time, "sleep", lambda s: None)
+
+    payload = github_collector.fetch_github_repos(
+        "inference server", per_page=5, max_attempts=3, backoff_seconds=0.01
+    )
+
+    assert calls["n"] == 3
+    assert payload == {"items": []}

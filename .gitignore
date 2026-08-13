@@ -16,3 +16,9 @@ data/*.sqlite
 reports/*.md
 !reports/examples/
 !reports/examples/*.md
+
+# Local tooling installed by Codex (uv, python, caches)
+.tools/
+.uv-cache/
+.uv-python/
+install.sh

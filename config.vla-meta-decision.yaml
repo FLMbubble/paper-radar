@@ -1,0 +1,504 @@
+# Driving Reward Radar — 自动驾驶决策模型奖励信号相关研究子方向雷达
+# 聚焦两条迁移路径：
+#   A. Lane State / 场景理解 → 动态 Agent 级感知（从静态标签到动态交互）
+#   B. Driving Agent 轨迹 → 密集奖励函数设计（TTC、安全约束、交互博弈）
+# 每个子方向配有专属 arXiv 检索语句，确保覆盖 2025 年后最新工作。
+#
+# v2 更新：根据两轮文献检索结果，新增 11 个子方向（标记 NEW），
+# 覆盖 VLM 奖励、意图条件 RL、cost map、场景图交互、逆博弈、
+# 协作 VLA、走廊规划、风险场、VLA 可解释性、价值函数标注、反应式仿真。
+
+database_path: /tmp/radar-driving-reward.sqlite
+reports_dir: /tmp/reports-driving-reward
+
+arxiv:
+  enabled: true
+  max_results: 50
+
+topics:
+  # ============================================================
+  # A 组：场景理解与 Lane State 迁移
+  # ============================================================
+
+  lane_scene_understanding:
+    weight: 1.3
+    keywords:
+      - lane detection
+      - lane state
+      - lane estimation
+      - drivable area
+      - scene understanding
+      - scene representation
+      - semantic scene
+      - traffic scene
+      - road scene
+      - scene graph
+      - scene context
+    arxiv_queries:
+      - 'cat:cs.CV AND (autonomous driving AND ("lane" OR "scene understanding" OR "scene representation"))'
+      - 'cat:cs.RO AND ("scene understanding" OR "scene graph" AND driving)'
+    github_queries:
+      - 'lane detection autonomous driving language:Python'
+      - 'scene understanding driving language:Python'
+
+  agent_trajectory_prediction:
+    weight: 1.4
+    keywords:
+      - trajectory prediction
+      - trajectory forecasting
+      - motion prediction
+      - motion forecasting
+      - future trajectory
+      - agent trajectory
+      - multi-agent trajectory
+      - trajectory planning
+      - trajectory estimation
+      - future motion
+    arxiv_queries:
+      - 'cat:cs.RO AND ("trajectory prediction" OR "motion prediction" AND autonomous driving)'
+      - 'cat:cs.CV AND ("trajectory prediction" OR "motion forecasting" AND driving)'
+      - 'cat:cs.LG AND ("multi-agent trajectory" OR "agent trajectory prediction")'
+    github_queries:
+      - 'trajectory prediction autonomous driving language:Python'
+      - 'motion prediction driving language:Python'
+
+  driving_intent_inference:
+    weight: 1.3
+    keywords:
+      - driving intent
+      - intent inference
+      - intent prediction
+      - intention estimation
+      - maneuver intention
+      - driving intention
+      - intent-aware
+      - intention-aware
+      - goal inference driving
+      - behavior prediction
+      - action anticipation driving
+    arxiv_queries:
+      - 'cat:cs.RO AND ("driving intent" OR "intent inference" OR "intent-aware" AND autonomous)'
+      - 'cat:cs.CV AND ("driving intention" OR "maneuver intention" OR "behavior prediction" driving)'
+    github_queries:
+      - 'driving intent prediction language:Python'
+      - 'intent-aware driving language:Python'
+
+  # NEW: 场景图交互 —— 多车辆交互关系建模
+  scene_graph_interaction:
+    weight: 1.3
+    keywords:
+      - scene graph
+      - interaction graph
+      - graph attention
+      - inter-vehicle interaction
+      - spatial relationship
+      - kinematic relationship
+      - edge feature
+      - message passing interaction
+      - dynamic scene graph
+      - interaction reasoning
+      - social graph
+    arxiv_queries:
+      - 'cat:cs.CV AND ("scene graph" OR "interaction graph" AND (driving OR "autonomous driving" OR traffic))'
+      - 'cat:cs.RO AND ("interaction reasoning" OR "inter-vehicle" AND driving)'
+    github_queries:
+      - 'scene graph driving interaction language:Python'
+      - 'vehicle interaction graph language:Python'
+
+  # ============================================================
+  # B 组：奖励函数与安全约束
+  # ============================================================
+
+  driving_reward_function:
+    weight: 1.5
+    keywords:
+      - reward function
+      - reward shaping
+      - reward design
+      - reward machine
+      - reward model
+      - reward signal
+      - dense reward
+      - intrinsic reward
+      - reward learning
+      - reinforcement learning reward
+      - reward function driving
+    arxiv_queries:
+      - 'cat:cs.LG AND ("reward function" OR "reward shaping" OR "reward design" AND driving)'
+      - 'cat:cs.RO AND ("reward" OR "reinforcement learning" AND autonomous driving)'
+      - 'cat:cs.AI AND ("reward machine" OR "reward shaping" AND "autonomous driving")'
+    github_queries:
+      - 'reward function driving reinforcement learning language:Python'
+      - 'reward shaping autonomous driving language:Python'
+
+  # NEW: VLM 奖励模型 —— 用视觉语言模型做 reward shaping
+  vlm_reward_model:
+    weight: 1.4
+    keywords:
+      - CLIP reward
+      - VLM reward
+      - vision-language reward
+      - language model reward
+      - human-aligned reward
+      - preference reward
+      - reward from language
+      - reward from vision
+      - multimodal reward
+      - foundation model reward
+      - text-guided reward
+    arxiv_queries:
+      - 'cat:cs.LG AND ("CLIP reward" OR "VLM reward" OR "language model reward" AND (driving OR robot OR "reinforcement learning"))'
+      - 'cat:cs.RO AND ("vision-language reward" OR "multimodal reward" OR "human-aligned reward" AND driving)'
+      - 'cat:cs.CV AND ("reward model" OR "reward shaping" AND ("vision-language" OR CLIP OR VLM))'
+    github_queries:
+      - 'CLIP reward reinforcement learning language:Python'
+      - 'VLM reward model driving language:Python'
+
+  # NEW: 意图条件 RL —— 用离散意图/行为标签驱动策略学习
+  intent_conditioned_rl:
+    weight: 1.4
+    keywords:
+      - intent-conditioned
+      - intent conditioned
+      - intention-conditioned
+      - intent-driven policy
+      - multi-intent
+      - intent-guided
+      - behavior-conditioned
+      - maneuver-conditioned
+      - mode-conditioned policy
+      - classifier-free guidance driving
+      - intent GRPO
+      - intent-conditioned flow
+    arxiv_queries:
+      - 'cat:cs.LG AND ("intent-conditioned" OR "behavior-conditioned" OR "mode-conditioned" AND (driving OR "reinforcement learning" OR policy))'
+      - 'cat:cs.RO AND ("intent-driven" OR "intent-guided" AND (driving OR "autonomous driving" OR policy))'
+    github_queries:
+      - 'intent-conditioned reinforcement learning language:Python'
+      - 'behavior-conditioned driving policy language:Python'
+
+  # NEW: Cost Map 规划 —— 语义 cost map / reward-level fusion
+  cost_map_planning:
+    weight: 1.3
+    keywords:
+      - cost map
+      - costmap
+      - cost function
+      - semantic cost
+      - reward-level fusion
+      - attention-level fusion
+      - cost pathway
+      - driving style cost
+      - style-conditioned cost
+      - planning cost
+      - trajectory cost
+    arxiv_queries:
+      - 'cat:cs.RO AND ("cost map" OR "costmap" AND (driving OR "autonomous driving" OR planning))'
+      - 'cat:cs.CV AND ("semantic cost" OR "cost function" AND (driving OR trajectory))'
+    github_queries:
+      - 'cost map autonomous driving language:Python'
+      - 'semantic costmap planning language:Python'
+
+  ttc_collision_safety:
+    weight: 1.4
+    keywords:
+      - time-to-collision
+      - time to collision
+      - TTC
+      - collision avoidance
+      - collision risk
+      - collision prediction
+      - safety metric
+      - surrogate safety
+      - conflict detection
+      - near-miss
+      - safety envelope
+    arxiv_queries:
+      - 'cat:cs.RO AND ("time-to-collision" OR "collision avoidance" AND autonomous driving)'
+      - 'cat:cs.CV AND ("collision prediction" OR "collision risk" AND driving)'
+      - 'cat:cs.SY AND ("collision avoidance" OR "safety metric" AND vehicle)'
+    github_queries:
+      - 'collision avoidance autonomous driving language:Python'
+      - 'TTC safety driving language:Python'
+
+  safe_rl_driving:
+    weight: 1.4
+    keywords:
+      - safe reinforcement learning
+      - safe RL
+      - constrained reinforcement learning
+      - barrier function
+      - control barrier
+      - CBF
+      - safety constraint
+      - safe exploration
+      - constrained MDP
+      - shield
+      - safety-critical
+    arxiv_queries:
+      - 'cat:cs.RO AND ("safe reinforcement learning" OR "constrained reinforcement learning" AND driving)'
+      - 'cat:cs.SY AND ("barrier function" OR "control barrier" AND "autonomous driving")'
+      - 'cat:cs.LG AND ("safe RL" OR "constrained RL" AND driving)'
+    github_queries:
+      - 'safe reinforcement learning driving language:Python'
+      - 'control barrier function driving language:Python'
+
+  # NEW: 风险场安全 —— 统一风险场 / 数字孪生安全验证
+  risk_field_safety:
+    weight: 1.3
+    keywords:
+      - risk field
+      - driving risk
+      - risk-aware
+      - risk assessment
+      - risk prediction
+      - digital twin driving
+      - safety validation
+      - risk map
+      - potential field
+      - danger zone
+      - risk estimation
+      - safety field
+    arxiv_queries:
+      - 'cat:cs.RO AND ("risk field" OR "driving risk" OR "risk-aware" AND (driving OR "autonomous driving"))'
+      - 'cat:cs.CV AND ("risk prediction" OR "risk estimation" AND driving)'
+      - 'cat:cs.SY AND ("digital twin" AND (driving OR "autonomous driving" OR safety))'
+    github_queries:
+      - 'driving risk field language:Python'
+      - 'digital twin autonomous driving safety language:Python'
+
+  # NEW: 走廊规划 —— corridor / 安全中间表示
+  corridor_planning:
+    weight: 1.3
+    keywords:
+      - corridor
+      - drivable corridor
+      - safety corridor
+      - obstacle-free zone
+      - spatio-temporal corridor
+      - free space planning
+      - reachable set
+      - safety envelope
+      - trajectory corridor
+      - motion corridor
+    arxiv_queries:
+      - 'cat:cs.RO AND ("corridor" OR "drivable corridor" OR "safety corridor" AND (driving OR "autonomous driving" OR planning))'
+      - 'cat:cs.CV AND ("free space" OR "reachable set" AND (driving OR "autonomous driving"))'
+    github_queries:
+      - 'driving corridor planning language:Python'
+      - 'safety corridor autonomous driving language:Python'
+
+  multi_agent_interaction:
+    weight: 1.3
+    keywords:
+      - multi-agent
+      - multiagent
+      - agent interaction
+      - interactive driving
+      - social driving
+      - game-theoretic
+      - game theory
+      - interactive planning
+      - social compliance
+      - negotiation driving
+      - cooperative driving
+    arxiv_queries:
+      - 'cat:cs.MA AND ("multi-agent" AND (driving OR "autonomous driving"))'
+      - 'cat:cs.RO AND ("multi-agent" OR "interactive" AND "autonomous driving")'
+      - 'cat:cs.GT AND ("game" OR "game-theoretic" AND (driving OR traffic))'
+    github_queries:
+      - 'multi-agent autonomous driving language:Python'
+      - 'interactive driving language:Python'
+
+  # NEW: 逆博弈轨迹 —— 从轨迹反推 cost / IRL 驾驶
+  inverse_game_trajectory:
+    weight: 1.3
+    keywords:
+      - inverse game
+      - inverse reinforcement learning
+      - IRL driving
+      - cost inference
+      - reward inference
+      - objective inference
+      - behavior cloning
+      - imitation learning driving
+      - trajectory inference
+      - utility learning
+      - cost recovery
+    arxiv_queries:
+      - 'cat:cs.LG AND ("inverse reinforcement learning" OR "inverse game" AND (driving OR "autonomous driving" OR traffic))'
+      - 'cat:cs.RO AND ("cost inference" OR "reward inference" OR "imitation learning" AND driving)'
+      - 'cat:cs.GT AND ("inverse game" AND (driving OR traffic OR vehicle))'
+    github_queries:
+      - 'inverse reinforcement learning driving language:Python'
+      - 'imitation learning autonomous driving language:Python'
+
+  # ============================================================
+  # C 组：VLA / 世界模型在驾驶中的应用
+  # ============================================================
+
+  vla_driving:
+    weight: 1.3
+    keywords:
+      - vision-language-action
+      - VLA
+      - vision language action
+      - end-to-end driving
+      - driving policy
+      - driving planner
+      - driving model
+      - embodied driving
+    arxiv_queries:
+      - 'cat:cs.RO AND ("vision-language-action" OR "VLA" AND driving)'
+      - 'cat:cs.CV AND ("end-to-end" AND "autonomous driving" AND ("planning" OR "policy"))'
+    github_queries:
+      - 'vision language action driving language:Python'
+      - 'end-to-end driving language:Python'
+
+  # NEW: 协作驾驶 VLA —— V2V/V2X 多车协作
+  cooperative_driving_vla:
+    weight: 1.3
+    keywords:
+      - cooperative driving
+      - V2V
+      - V2X
+      - vehicle-to-vehicle
+      - vehicle-to-everything
+      - collaborative perception
+      - connected autonomous
+      - fleet coordination
+      - shared world model
+      - cooperative planning
+      - multi-vehicle communication
+    arxiv_queries:
+      - 'cat:cs.RO AND ("cooperative driving" OR "V2V" OR "V2X" AND (autonomous OR driving))'
+      - 'cat:cs.MA AND ("connected autonomous" OR "collaborative perception" AND driving)'
+      - 'cat:cs.CV AND ("collaborative perception" OR "cooperative perception" AND driving)'
+    github_queries:
+      - 'cooperative autonomous driving V2X language:Python'
+      - 'collaborative perception driving language:Python'
+
+  # NEW: VLA 可解释性 —— VLA 内部机制 probing / 反事实分析
+  vla_interpretability:
+    weight: 1.2
+    keywords:
+      - interpretability
+      - explainability
+      - probing
+      - mechanistic interpretability
+      - counterfactual
+      - causal analysis
+      - attention analysis
+      - layer-wise probing
+      - model internals
+      - planning token
+      - representation analysis
+      - explainable driving
+    arxiv_queries:
+      - 'cat:cs.CV AND ("interpretability" OR "explainability" OR "counterfactual" AND (driving OR "autonomous driving" OR VLA))'
+      - 'cat:cs.LG AND ("probing" OR "mechanistic interpretability" AND ("vision-language" OR VLA OR driving))'
+    github_queries:
+      - 'driving model interpretability language:Python'
+      - 'VLA explainability language:Python'
+
+  driving_world_model:
+    weight: 1.3
+    keywords:
+      - world model
+      - world simulator
+      - driving world model
+      - driving simulation
+      - model-based reinforcement learning
+      - model-based RL
+      - imagination
+      - latent dynamics
+      - future prediction
+      - scene prediction
+    arxiv_queries:
+      - 'cat:cs.RO AND ("world model" AND (driving OR "autonomous driving"))'
+      - 'cat:cs.CV AND ("driving world model" OR "scene prediction" AND driving)'
+      - 'cat:cs.LG AND ("model-based reinforcement learning" AND driving)'
+    github_queries:
+      - 'driving world model language:Python'
+      - 'model-based RL driving language:Python'
+
+  driving_data_annotation:
+    weight: 1.2
+    keywords:
+      - data annotation
+      - data labeling
+      - dataset construction
+      - driving dataset
+      - annotation pipeline
+      - trajectory annotation
+      - bounding box
+      - object detection annotation
+      - data quality
+      - auto-labeling
+    arxiv_queries:
+      - 'cat:cs.CV AND ("driving dataset" OR "autonomous driving dataset" AND annotation)'
+      - 'cat:cs.RO AND ("data annotation" OR "dataset construction" AND driving)'
+    github_queries:
+      - 'driving dataset annotation language:Python'
+      - 'autonomous driving data labeling language:Python'
+
+  # ============================================================
+  # D 组：价值函数与评估（NEW）
+  # ============================================================
+
+  # NEW: 价值函数标注 —— stage-aware label / per-frame critic / dense value
+  value_function_labeling:
+    weight: 1.3
+    keywords:
+      - value function
+      - critic model
+      - dense value
+      - per-frame label
+      - stage-aware label
+      - value estimation
+      - advantage estimation
+      - success detector
+      - progress label
+      - reward label
+      - world critic
+      - value learning
+    arxiv_queries:
+      - 'cat:cs.LG AND ("value function" OR "critic" OR "value estimation" AND (driving OR "reinforcement learning" OR robot))'
+      - 'cat:cs.RO AND ("dense reward" OR "per-frame" OR "stage-aware" AND (driving OR policy OR robot))'
+    github_queries:
+      - 'value function reinforcement learning language:Python'
+      - 'critic model driving language:Python'
+
+  # NEW: 反应式仿真 —— reactive behavior simulation / agent 响应评估
+  reactive_simulation:
+    weight: 1.2
+    keywords:
+      - reactive simulation
+      - reactive behavior
+      - agent response
+      - closed-loop simulation
+      - scenario testing
+      - behavior simulation
+      - driving simulator
+      - agent reaction
+      - counterfactual simulation
+      - what-if simulation
+      - interactive simulation
+    arxiv_queries:
+      - 'cat:cs.RO AND ("reactive simulation" OR "closed-loop simulation" OR "driving simulator" AND autonomous driving)'
+      - 'cat:cs.CV AND ("scenario testing" OR "behavior simulation" AND driving)'
+      - 'cat:cs.LG AND ("agent response" OR "reactive" OR "counterfactual simulation" AND driving)'
+    github_queries:
+      - 'driving simulation reactive language:Python'
+      - 'closed-loop autonomous driving simulator language:Python'
+
+github:
+  enabled: true
+  max_results: 40
+  token_env: GITHUB_TOKEN
+
+scoring:
+  paper_weight: 1.0
+  repo_weight: 1.0
+  star_weight: 0.05
+  match_weight: 2.0

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
@@ -41,14 +42,27 @@ def build_arxiv_params(
     }
 
 
-def fetch_arxiv_feed(search_query: str, start: int = 0, max_results: int = 25) -> str:
-    response = httpx.get(
-        ARXIV_API_URL,
-        params=build_arxiv_params(search_query, start, max_results),
-        timeout=30.0,
-    )
-    response.raise_for_status()
-    return response.text
+def fetch_arxiv_feed(
+    search_query: str,
+    start: int = 0,
+    max_results: int = 25,
+    max_attempts: int = 3,
+    backoff_seconds: float = 2.0,
+) -> str:
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = httpx.get(
+                ARXIV_API_URL,
+                params=build_arxiv_params(search_query, start, max_results),
+                timeout=30.0,
+            )
+            response.raise_for_status()
+            return response.text
+        except httpx.HTTPError:
+            if attempt < max_attempts:
+                time.sleep(backoff_seconds * attempt)
+                continue
+            raise
 
 
 def parse_arxiv_feed(xml: str) -> list[Paper]:

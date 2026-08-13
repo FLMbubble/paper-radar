@@ -1,0 +1,141 @@
+# WM Radar — 世界模型研究子方向雷达
+# 采集范围统一为 World Model 大方向；tag 细分到研究子方向，
+# 仪表盘能看到 WM 内部各主题的热度与进展。
+# 子方向基于 arXiv 近期高发主题归纳。
+
+database_path: data/radar-wm.sqlite
+reports_dir: reports/wm
+
+arxiv:
+  enabled: true
+  max_results: 40
+
+topics:
+  video_generation:
+    weight: 1.2
+    keywords:
+      - video generation
+      - video world model
+      - text-to-video
+      - image-to-video
+      - long video generation
+      - streaming generation
+      - video prediction
+      - video synthesis
+      - cinematic video
+      - real-time video
+    arxiv_queries: &wm_arxiv
+      - 'cat:cs.CV AND ("world model" OR "world simulator" OR "video generation world")'
+      - 'cat:cs.RO AND ("world model" OR "model-based reinforcement learning")'
+      - 'cat:cs.LG AND ("world model" OR dreamer OR "environment model")'
+      - 'cat:cs.CV AND ("text-to-video" OR "image-to-video" OR "long video generation")'
+    github_queries: &wm_github
+      - 'world model language:Python'
+      - 'driving world model language:Python'
+      - 'model-based reinforcement learning dreamer language:Python'
+  action_conditioned:
+    weight: 1.3
+    keywords:
+      - action-conditioned
+      - action conditioned
+      - interactive
+      - controllable generation
+      - action conditioning
+      - instruction-following
+      - action-driven
+      - embodied interaction
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  physical_dynamics:
+    weight: 1.3
+    keywords:
+      - physical
+      - physics
+      - dynamics
+      - physically-consistent
+      - physically consistent
+      - mechanics
+      - physical simulation
+      - continuous-time
+      - flow matching
+      - physical language
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  robot_learning:
+    weight: 1.2
+    keywords:
+      - robot
+      - robotic
+      - manipulation
+      - embodied
+      - policy learning
+      - sim-to-real
+      - sim2real
+      - reinforcement learning
+      - autonomous driving
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  data_scaling:
+    weight: 1.1
+    keywords:
+      - data scaling
+      - large-scale
+      - dataset
+      - data engine
+      - data construction
+      - synthetic data
+      - data curation
+      - foundation model
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  representation_learning:
+    weight: 1.1
+    keywords:
+      - latent
+      - representation
+      - latent dynamics
+      - encoding
+      - variational
+      - embedding
+      - autoencoder
+      - self-supervised
+      - abstraction
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  inference_efficiency:
+    weight: 1.1
+    keywords:
+      - efficient
+      - inference
+      - real-time
+      - distillation
+      - acceleration
+      - low-cost
+      - fast
+      - parallel decoding
+      - quantization
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+  evaluation:
+    weight: 1.0
+    keywords:
+      - benchmark
+      - evaluation
+      - protocol
+      - probing
+      - assessment
+      - metrics
+      - leaderboard
+    arxiv_queries: *wm_arxiv
+    github_queries: *wm_github
+
+github:
+  enabled: true
+  max_results: 40
+  token_env: GITHUB_TOKEN
+
+scoring:
+  paper_weight: 1.0
+  repo_weight: 1.0
+  star_weight: 0.05
+  match_weight: 2.0

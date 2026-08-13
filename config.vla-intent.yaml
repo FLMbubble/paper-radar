@@ -1,0 +1,111 @@
+# VLA Intent Radar — 聚焦 VLA 中 "intent" 相关研究的子方向雷达
+# 采集范围在 VLA 基础上加 intent 专用查询；tag 细分到 intent 研究子方向。
+# 子方向基于实际检索到的论文归纳（intent-aware、人机协作、主动感知、安全）。
+
+database_path: data/radar-vla-intent.sqlite
+reports_dir: reports/vla-intent
+
+arxiv:
+  enabled: true
+  max_results: 40
+
+topics:
+  intent_estimation:
+    weight: 1.4
+    keywords:
+      - intent estimation
+      - intent inference
+      - intent prediction
+      - intent recognition
+      - goal inference
+      - goal recognition
+      - plan recognition
+      - user intent
+      - human intent
+    arxiv_queries:
+      - 'cat:cs.RO AND (intent OR "goal inference" OR "plan recognition")'
+      - 'cat:cs.HC AND ("intent recognition" OR "user intent" OR "human intent")'
+    github_queries:
+      - 'intent recognition robot language:Python'
+      - 'goal inference manipulation language:Python'
+  intent_aware_policy:
+    weight: 1.4
+    keywords:
+      - intent-aware
+      - intent aware
+      - intent-conditioned
+      - intent conditioned
+      - learning intent
+      - intent-driven
+      - anticipatory
+      - proactive
+    arxiv_queries:
+      - 'cat:cs.RO AND ("intent-aware" OR "intent aware" OR "intent-conditioned")'
+      - 'cat:cs.LG AND ("intent-aware" OR anticipatory policy robot)'
+    github_queries:
+      - 'intent-aware policy language:Python'
+      - 'anticipatory robot language:Python'
+  human_robot_collaboration:
+    weight: 1.3
+    keywords:
+      - human-robot collaboration
+      - human robot collaboration
+      - human-robot interaction
+      - human robot interaction
+      - interaction-centric
+      - shared autonomy
+      - shared control
+      - handover
+      - fluency
+    arxiv_queries:
+      - 'cat:cs.RO AND ("human-robot collaboration" OR "shared autonomy" OR handover)'
+      - 'cat:cs.HC AND ("human-robot interaction" OR "interaction-centric")'
+    github_queries:
+      - 'human robot collaboration language:Python'
+      - 'shared autonomy language:Python'
+  active_perception:
+    weight: 1.2
+    keywords:
+      - active perception
+      - active vision
+      - camera motion
+      - egocentric
+      - viewpoint selection
+      - next-best-view
+      - explore
+      - reveal occlusion
+      - inspect
+    arxiv_queries:
+      - 'cat:cs.RO AND ("active perception" OR "camera motion" OR "next-best-view")'
+      - 'cat:cs.CV AND (egocentric OR "active vision" OR "viewpoint selection")'
+    github_queries:
+      - 'active perception robot language:Python'
+      - 'next best view language:Python'
+  safety_constraints:
+    weight: 1.2
+    keywords:
+      - safety
+      - safe
+      - barrier function
+      - control barrier
+      - constraint
+      - collision avoidance
+      - barrier
+      - shield
+    arxiv_queries:
+      - 'cat:cs.RO AND ("barrier function" OR "control barrier" OR "safe reinforcement")'
+      - 'cat:cs.SY AND ("barrier function" OR "safety constraint")'
+    github_queries:
+      - 'control barrier function language:Python'
+      - 'safe reinforcement learning language:Python'
+
+github:
+  enabled: true
+  max_results: 30
+  token_env: GITHUB_TOKEN
+
+scoring:
+  paper_weight: 1.0
+  repo_weight: 1.0
+  star_weight: 0.05
+  match_weight: 2.0
